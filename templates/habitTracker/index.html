@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main-container">
+<div>
+    <a href="{% url 'newHabit'%}">Create a habit</a>
+    <hr>
+</div>
+
+<div>
+{% for habit in habits%}
+    
+    <a href="{% url 'habitDetails' habit.pk %}">{{habit.name}}</a>
+    <hr>
+ 
+{% endfor %}
+</div>
+
+</div>
+{% endblock %}
