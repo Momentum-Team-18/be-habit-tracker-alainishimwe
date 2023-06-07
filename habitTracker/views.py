@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Habit, HabitRecord
+from .models import Habit, HabitRecord, User
 from .forms import HabitForm, HabitRecordForm
 # Create your views here.
 def homePage(request):
@@ -13,7 +13,9 @@ def newHabit(request):
     if request.method == 'POST':
         form = HabitForm(request.POST)
         if form.is_valid():
-            form.save()
+            habit = form.save(commit=False)
+            habit.user = request.user
+            habit.save()
             return redirect('homePage')
     return render(request, 'habitTracker/habit_form.html', {'form': form})
 
