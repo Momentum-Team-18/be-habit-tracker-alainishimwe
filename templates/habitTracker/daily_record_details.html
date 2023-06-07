@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content%}
-{{ habit }}
-{% for habitRecord in habit.HabitRecords.all %}
+
     <h1>{{habitRecord.record_date}}</h1>
     <h1>{{habitRecord.achieved}}</h1>
-{% endfor %}
 
 
 {%endblock%}

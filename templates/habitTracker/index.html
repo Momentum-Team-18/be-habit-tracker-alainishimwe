@@ -1,20 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="main-container">
-<div>
-    <a href="{% url 'newHabit'%}">Create a habit</a>
-    <hr>
-</div>
-
-<div>
-{% for habit in habits%}
+    <div class="main-container">
+    <div>
+        <a href="{% url 'newHabit'%}">Create a habit</a>
+        <hr>
+    </div>
     
-    <a href="{% url 'habitDetails' habit.pk %}">{{habit.name}}</a>
-    <hr>
- 
-{% endfor %}
-</div>
+    <div>
+    
+    
+    {% for habit in habits%}
+    
+        <h3><a href="{% url 'habitDetails' habit.id %}">{{habit.name}}</a></h3>
+        <p>Goal: {{habit.target}}</p>
+        <p><a href="{% url 'newRecord' habit.id  %}">Enter your daily record here</p></a>
+        <hr>
+    
+  
+    {%endfor%}
+    </div>
 
-</div>
+    </div>
 {% endblock %}

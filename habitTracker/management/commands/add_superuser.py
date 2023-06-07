@@ -26,3 +26,7 @@ class Command(BaseCommand):
           else:
             msg = self.style.WARNING(f"Superuser {settings.DJANGO_SUPERUSER_USERNAME} already exists.")
           self.stdout.write(msg)
+
+
+
+          
