@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime, date
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -20,7 +21,7 @@ class HabitRecord(models.Model):
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='HabitRecords')
 
 
-    record_date = models.DateField(auto_now_add=False, auto_now=False, blank=False, null=False, default=datetime.now())
+    record_date = models.DateField(auto_now_add=False, auto_now=False, blank=False, null=False, default=timezone.now())
     achieved = models.IntegerField(default=0, null=False )
 
     def __str__(self):

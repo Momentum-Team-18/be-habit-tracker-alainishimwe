@@ -10,11 +10,12 @@
         <h3>Logs</h3>
         {% for habitRecord in habit.HabitRecords.all %}
             <p>{{habitRecord.record_date}}</p>
-            <p>{{habitRecord.achieved}}</p>
+            <p>Your target: {{habitRecord.achieved}}</p>
+            <p>Your accompl: {{habit.target_number}}</p>
             <a href="{% url 'editRecord' habitRecord.id %}">Edit &nbsp </a> 
             <a href="{% url 'deleteRecord' habitRecord.id %}">Delete</a> <br><br>
             <small>Goal: {{habit.target}}</small> <br>
-            {% if habitRecord.achieved >  habitRecord.target_number %}
+            {% if habitRecord.achieved >=  habit.target_number %}
                 <small>You are doing an excellent job</small>
             {% else %}
                 <small>You did not meet today's goal</small>
