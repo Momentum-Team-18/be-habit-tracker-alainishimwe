@@ -35,6 +35,27 @@ def newRecord(request,pk):
             return redirect('habitDetails', pk)
     return render(request, 'habitTracker/daily_record_form.html', context )
 
+def editRecord(request,pk):
+    record = get_object_or_404(HabitRecord,pk=pk)
+    habit_pk = record.habit_id
+    
+    if request.method == "POST":
+        form = HabitRecordForm(request.POST, instance=record)
+        if form.is_valid():
+            record=form.save(commit=False)
+            record.save()
+            return redirect('habitDetails', habit_pk)
+    else:
+        form = HabitRecordForm(instance=record)
+    return render (request, 'habitTracker/daily_record_form.html', {'form':form} )
+
+def deleteRecord(request, pk):
+    record = get_object_or_404(HabitRecord,pk=pk)
+    habit_pk = record.habit_id
+    record.delete()
+    return redirect('habitDetails', habit_pk)
+
+
 def habitDetails(request,pk):
     habit = get_object_or_404(Habit, pk=pk)
     
