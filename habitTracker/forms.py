@@ -14,3 +14,4 @@ class HabitRecordForm(forms.ModelForm):
         model= HabitRecord
         widgets = {'record_date': SelectDateWidget()}
         fields = ('record_date', 'achieved')
+        

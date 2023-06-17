@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Habit, HabitRecord, User
 from .forms import HabitForm, HabitRecordForm
+from django.db.models import Avg
+from django.db.models.functions import Round
+import math
 # Create your views here.
 def homePage(request):
     habits = Habit.objects.all()
@@ -58,7 +61,23 @@ def deleteRecord(request, pk):
 
 def habitDetails(request,pk):
     habit = get_object_or_404(Habit, pk=pk)
-    
-    context = {'habit':habit }
+    record = HabitRecord.objects.filter(habit_id=pk)
+    average = record.aggregate((Avg('achieved')))
+    average_numb = math.floor(average['achieved__avg'])
+    context = {'habit':habit, 'record':record, 'average_numb':average_numb }
 
     return render(request, 'habitTracker/habitDetails.html', context)
+
+
+def dailyRecord(request, pk):
+    records = HabitRecord.objects.filter(record_date=pk)
+    
+    id_for_habits = Habit.objects.values_list('id', flat=True) 
+    # record = get_object_or_404(HabitRecord, record_date=pk)
+    
+    context = { 'records': records, 'id_for_habits': id_for_habits}
+
+    return render(request, 'habitTracker/record_Details.html', context)
+
+
+

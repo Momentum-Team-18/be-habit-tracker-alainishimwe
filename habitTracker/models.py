@@ -21,8 +21,16 @@ class HabitRecord(models.Model):
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='HabitRecords')
 
 
-    record_date = models.DateField(auto_now_add=False, auto_now=False, blank=False, null=False, default=timezone.now())
+    record_date = models.DateField(auto_now_add=False, auto_now=False, blank=False, null=False, default=timezone.now)
     achieved = models.IntegerField(default=0, null=False )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['habit','record_date'], name='unique_constr'
+            )
+        ]
+        ordering = ['record_date']
 
     def __str__(self):
         return f'{self.habit} on {self.record_date}'

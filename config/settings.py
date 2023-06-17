@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'habitTracker',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [

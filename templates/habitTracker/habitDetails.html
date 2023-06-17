@@ -4,28 +4,38 @@
 <div class="habitRecord">
     <div>
         <h3>{{ habit }}</h3>
+        <h4>Days with record:</h4>
+        <small class="record-date"><a href="{% url 'newRecord' habit.id  %}">Add record</a></small>
+        {% for habitRecord in habit.HabitRecords.all %}
+            <p class="record-date"><a href="{% url 'dailyRecord'  habitRecord.record_date %}">{{habitRecord.record_date}}</a></p>
+        {% endfor %}
+
         
     </div>
     <div>
         <h3>Logs</h3>
         {% for habitRecord in habit.HabitRecords.all %}
-            <p>{{habitRecord.record_date}}</p>
-            <p>Your target: {{habitRecord.achieved}}</p>
-            <p>Your accompl: {{habit.target_number}}</p>
+            <p class="record-date">{{habitRecord.record_date}}</p>
+            <p>Your accompl: {{habitRecord.achieved}}</p>
+            <p>Your target: {{habit.target_number}}</p>
             <a href="{% url 'editRecord' habitRecord.id %}">Edit &nbsp </a> 
             <a href="{% url 'deleteRecord' habitRecord.id %}">Delete</a> <br><br>
             <small>Goal: {{habit.target}}</small> <br>
             {% if habitRecord.achieved >=  habit.target_number %}
-                <small>You are doing an excellent job</small>
+                <small style="background-color: chartreuse;">You are doing an excellent job</small>
             {% else %}
-                <small>You did not meet today's goal</small>
+                <small style="background-color: red;">You did not meet today's goal</small>
             {% endif %}
+            
             <hr>
         {% endfor %}
         
+        
+    </div>
+    <div>
+        <h3>Your Daily Average is:</h3>
+        <p>{{average_numb}}</p>
     </div>
 </div>
 
-
-
-{%endblock%}
+{% endblock %}
