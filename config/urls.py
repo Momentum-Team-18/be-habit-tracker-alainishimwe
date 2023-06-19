@@ -22,4 +22,5 @@ urlpatterns = [
     path('accounts/', include('registration.backends.simple.urls')),
     path('', include('habitTracker.urls')),
     path('api/', include('api.urls')),
+    path('api-auth/', include('rest_framework.urls')),
 ]

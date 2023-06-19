@@ -4,11 +4,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from habitTracker.models import Habit, HabitRecord, User
 from django.contrib.auth.models import AbstractUser
-from api.serializers import HabitSerializer, HabitRecordSerializer
+from api.serializers import HabitSerializer, HabitRecordSerializer, UserSerializer
 from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework import permissions
+from api.permissions import IsOwnerOrReadOnly
 
 # Create your views here.
 
@@ -55,6 +57,7 @@ from rest_framework import generics
 class habit_list(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -62,10 +65,14 @@ class habit_list(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericA
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+    
     
     
 class one_habit(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
     queryset = Habit.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
 
     serializer_class = HabitSerializer
     def get(self, request, *args, **kwargs):
@@ -80,6 +87,7 @@ class one_habit(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.Destroy
 class create_habit(mixins.CreateModelMixin, generics.GenericAPIView):
 
     serializer_class = HabitSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
 
     def post(self,request,*args,**kwargs):
         return self.create(request, *args, **kwargs)
@@ -91,6 +99,7 @@ class habit_list_record(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins
     """
     queryset = HabitRecord.objects.all()
     serializer_class = HabitRecordSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     # def post(self, request, *args, **kwargs):
     #     return self.create(request, *args, **kwargs)
@@ -106,6 +115,11 @@ class habit_list_record(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins
 
 class create_record(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = HabitRecordSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def post(self,request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+    
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

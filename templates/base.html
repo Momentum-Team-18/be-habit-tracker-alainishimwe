@@ -16,6 +16,9 @@
     <div class="nav-container">
         <div>
             <h1>Daily Habits</h1>
+            {% if request.user.is_authenticated %}
+                <p>Logged in as {{request.user}}</p>
+            {% endif %}
         </div>
         <div>
             {% if request.user.is_authenticated %}

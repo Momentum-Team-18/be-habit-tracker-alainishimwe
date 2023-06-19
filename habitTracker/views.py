@@ -1,16 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Habit, HabitRecord, User
 from .forms import HabitForm, HabitRecordForm
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from django.db.models.functions import Round
 import math
 # Create your views here.
+
+@login_required
 def homePage(request):
     habits = Habit.objects.all()
     habitRecords = HabitRecord.objects.all()
     context = {'habits':habits, 'habitRecords':habitRecords}
     return render(request, 'habitTracker/index.html', context)
-
+@login_required
 def newHabit(request):
     form = HabitForm()
     if request.method == 'POST':
@@ -26,7 +30,9 @@ def newRecord(request,pk):
     form = HabitRecordForm()
     # habitRecords = HabitRecord.objects.all()
     habit = get_object_or_404(Habit, id=pk)
-
+    if request.user != habit.user:
+        return HttpResponse("Not allowed here")
+    
     context = {'form': form, 'habit':habit}
     if request.method == 'POST':
         form= HabitRecordForm(request.POST)
@@ -41,6 +47,8 @@ def newRecord(request,pk):
 def editRecord(request,pk):
     record = get_object_or_404(HabitRecord,pk=pk)
     habit_pk = record.habit_id
+    if request.user != record.habit.user:
+        return HttpResponse("Not allowed to edit")
     
     if request.method == "POST":
         form = HabitRecordForm(request.POST, instance=record)
@@ -55,6 +63,9 @@ def editRecord(request,pk):
 def deleteRecord(request, pk):
     record = get_object_or_404(HabitRecord,pk=pk)
     habit_pk = record.habit_id
+
+    if request.user != record.habit.user:
+        return HttpResponse("Not allowed to delete")
     record.delete()
     return redirect('habitDetails', habit_pk)
 

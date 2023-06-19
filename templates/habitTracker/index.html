@@ -4,19 +4,33 @@
     {% if request.user.is_authenticated %}
         <div class="main-container">
         <div>
-            <a href="{% url 'newHabit'%}">Create a habit</a>
+            <h2><a href="{% url 'newHabit'%}">Create a habit</a></h2>
             <hr>
+            <h3>Habits you are observing:</h3>
+            {% for habit in habits%}
+            {% if request.user != habit.user %}
+            <h4><a href="{% url 'habitDetails' habit.id %}">{{habit.name}}</a></h4>
+            <p>Goal: {{habit.target}}</p>
+            <!-- <p><a href="{% url 'newRecord' habit.id  %}">Enter your daily record here</p></a> -->
+            <hr>
+            {% endif %}
+        
+    
+        {%endfor%}
         </div>
         
         <div>
         
-        
+            <h2>My Habits:</h2>
         {% for habit in habits%}
-        
+            {% if request.user == habit.user %}
+            
+            <hr>
             <h3><a href="{% url 'habitDetails' habit.id %}">{{habit.name}}</a></h3>
             <p>Goal: {{habit.target}}</p>
             <p><a href="{% url 'newRecord' habit.id  %}">Enter your daily record here</p></a>
             <hr>
+            {% endif %}
         
     
         {%endfor%}

@@ -3,6 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
 
 urlpatterns = [
+    path('users/', views.UserList.as_view()),
     path('habits/', views.habit_list.as_view(), name='habit-list'),
     path('records/<int:pk>', views.habit_list_record.as_view(), name='habit-list-record'),
     path('createhabit/', views.create_habit.as_view(), name='create-habit'),
